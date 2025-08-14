@@ -131,7 +131,7 @@ const Cartoes = () => {
           limite: formData.limite,
           dia_fechamento: formData.dia_fechamento,
           dia_vencimento: formData.dia_vencimento,
-          banco_id: formData.banco_id || null
+          banco_id: formData.banco_id === "none" ? null : formData.banco_id || null
         })
         .eq("id", editingCartao.id);
 
@@ -157,7 +157,7 @@ const Cartoes = () => {
           limite: formData.limite,
           dia_fechamento: formData.dia_fechamento,
           dia_vencimento: formData.dia_vencimento,
-          banco_id: formData.banco_id || null,
+          banco_id: formData.banco_id === "none" ? null : formData.banco_id || null,
           user_id: user?.id
         });
 
@@ -185,7 +185,7 @@ const Cartoes = () => {
       limite: cartao.limite,
       dia_fechamento: cartao.dia_fechamento,
       dia_vencimento: cartao.dia_vencimento,
-      banco_id: cartao.banco_id || ""
+      banco_id: cartao.banco_id || "none"
     });
     setIsDialogOpen(true);
   };
@@ -217,7 +217,7 @@ const Cartoes = () => {
       limite: 0,
       dia_fechamento: 1,
       dia_vencimento: 10,
-      banco_id: ""
+      banco_id: "none"
     });
     setEditingCartao(null);
     setIsDialogOpen(false);
@@ -343,12 +343,12 @@ const Cartoes = () => {
                 </div>
                 <div>
                   <Label htmlFor="banco">Banco (Opcional)</Label>
-                  <Select value={formData.banco_id} onValueChange={(value) => setFormData({ ...formData, banco_id: value })}>
+                  <Select value={formData.banco_id || "none"} onValueChange={(value) => setFormData({ ...formData, banco_id: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o banco (opcional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Nenhum banco associado</SelectItem>
+                      <SelectItem value="none">Nenhum banco associado</SelectItem>
                       {bancos.map((banco) => (
                         <SelectItem key={banco.id} value={banco.id}>
                           {banco.nome}
