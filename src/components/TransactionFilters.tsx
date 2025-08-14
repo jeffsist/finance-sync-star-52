@@ -85,7 +85,9 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
   };
 
   const handleFilterChange = (key: keyof FilterState, value: any) => {
-    const newFilters = { ...filters, [key]: value };
+    // Convert "all" to empty string for filtering logic
+    const actualValue = value === "all" ? "" : value;
+    const newFilters = { ...filters, [key]: actualValue };
     setFilters(newFilters);
     onFiltersChange(newFilters);
   };
@@ -196,12 +198,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Tipo */}
               <div className="space-y-2">
                 <Label>Tipo</Label>
-                <Select value={filters.tipo} onValueChange={(value) => handleFilterChange("tipo", value)}>
+                <Select value={filters.tipo || "all"} onValueChange={(value) => handleFilterChange("tipo", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os tipos" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     <SelectItem value="receita">
                       <div className="flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-income" />
@@ -221,12 +223,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Status */}
               <div className="space-y-2">
                 <Label>Status</Label>
-                <Select value={filters.status} onValueChange={(value) => handleFilterChange("status", value)}>
+                <Select value={filters.status || "all"} onValueChange={(value) => handleFilterChange("status", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     <SelectItem value="pago">Pago</SelectItem>
                     <SelectItem value="pendente">Pendente</SelectItem>
                   </SelectContent>
@@ -236,12 +238,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Categoria */}
               <div className="space-y-2">
                 <Label>Categoria</Label>
-                <Select value={filters.categoriaId} onValueChange={(value) => handleFilterChange("categoriaId", value)}>
+                <Select value={filters.categoriaId || "all"} onValueChange={(value) => handleFilterChange("categoriaId", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas as categorias" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     {categorias.map((categoria) => (
                       <SelectItem key={categoria.id} value={categoria.id}>
                         {categoria.nome}
@@ -254,12 +256,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Banco/Conta */}
               <div className="space-y-2">
                 <Label>Conta</Label>
-                <Select value={filters.bancoId} onValueChange={(value) => handleFilterChange("bancoId", value)}>
+                <Select value={filters.bancoId || "all"} onValueChange={(value) => handleFilterChange("bancoId", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas as contas" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     {bancos.map((banco) => (
                       <SelectItem key={banco.id} value={banco.id}>
                         {banco.nome}
@@ -272,12 +274,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Cartão */}
               <div className="space-y-2">
                 <Label>Cartão</Label>
-                <Select value={filters.cartaoId} onValueChange={(value) => handleFilterChange("cartaoId", value)}>
+                <Select value={filters.cartaoId || "all"} onValueChange={(value) => handleFilterChange("cartaoId", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os cartões" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     {cartoes.map((cartao) => (
                       <SelectItem key={cartao.id} value={cartao.id}>
                         {cartao.nome}
@@ -290,12 +292,12 @@ export const TransactionFilters = ({ onFiltersChange, activeFilters }: FilterPro
               {/* Parcelamento */}
               <div className="space-y-2">
                 <Label>Parcelamento</Label>
-                <Select value={filters.parcelamento} onValueChange={(value) => handleFilterChange("parcelamento", value)}>
+                <Select value={filters.parcelamento || "all"} onValueChange={(value) => handleFilterChange("parcelamento", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="vista">À vista</SelectItem>
                     <SelectItem value="parcelada">Parceladas</SelectItem>
                   </SelectContent>
