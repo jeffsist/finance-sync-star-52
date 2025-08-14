@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useTransacoesPendentes } from "@/hooks/useTransacoesPendentes";
-import ModalConfirmarRecebimento from "@/components/ModalConfirmarRecebimento";
+import { ModalConfirmarRecebimento } from "@/components/ModalConfirmarRecebimento";
 import { Clock, CheckCircle, Calendar } from "lucide-react";
 
 interface ContasPendentesProps {
@@ -131,12 +131,51 @@ const ContasPendentes = ({ user, mesSelecionado = new Date() }: ContasPendentesP
           </div>
         ))}
         
-        <ModalConfirmarRecebimento
-          isOpen={modalAberto}
-          onClose={() => setModalAberto(false)}
-          transacao={transacaoSelecionada}
-          onConfirmed={handleConfirmado}
-        />
+        {transacaoSelecionada && (
+          <ModalConfirmarRecebimento
+            isOpen={modalAberto}
+            onClose={() => setModalAberto(false)}
+            onConfirm={async (contaId: string, observacoes?: string) => {
+              try {
+                // Atualizar a receita para associar ao banco
+                const { error: updateError } = await supabase
+                  .from("transacoes")
+                  .update({
+                    banco_id: contaId,
+                    observacoes: observacoes
+                  })
+                  .eq("id", transacaoSelecionada.id);
+
+                if (updateError) throw updateError;
+
+                // Atualizar o saldo do banco
+                const { data: banco, error: bancoError } = await supabase
+                  .from("bancos")
+                  .select("saldo_atual")
+                  .eq("id", contaId)
+                  .single();
+
+                if (bancoError) throw bancoError;
+
+                const novoSaldo = banco.saldo_atual + transacaoSelecionada.valor;
+                const { error: saldoError } = await supabase
+                  .from("bancos")
+                  .update({ saldo_atual: novoSaldo })
+                  .eq("id", contaId);
+
+                if (saldoError) throw saldoError;
+
+                handleConfirmado();
+              } catch (error) {
+                console.error("Erro ao confirmar recebimento:", error);
+              }
+            }}
+            titulo="Confirmar Recebimento"
+            descricao={`Confirme o recebimento da receita: ${transacaoSelecionada.descricao}`}
+            valor={transacaoSelecionada.valor}
+            receitaId={transacaoSelecionada.id}
+          />
+        )}
       </CardContent>
     </Card>
   );

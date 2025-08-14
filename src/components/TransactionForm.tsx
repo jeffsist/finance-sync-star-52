@@ -59,6 +59,7 @@ interface FormData {
   total_parcelas: number;
   parcela_atual: number;
   status_pagamento: string; // "pago" ou "pendente"
+  status_recebimento: string; // "recebido" ou "pendente" (para receitas)
   data_vencimento: string;
 }
 
@@ -94,6 +95,7 @@ export const TransactionForm = ({
     total_parcelas: 1,
     parcela_atual: 1,
     status_pagamento: "pago",
+    status_recebimento: "recebido",
     data_vencimento: ""
   });
   const { toast } = useToast();
@@ -116,6 +118,7 @@ export const TransactionForm = ({
           total_parcelas: editingTransacao.total_parcelas || 1,
           parcela_atual: editingTransacao.parcela_atual || 1,
           status_pagamento: editingTransacao.banco_id || editingTransacao.cartao_credito_id ? "pago" : "pendente",
+          status_recebimento: editingTransacao.banco_id ? "recebido" : "pendente",
           data_vencimento: editingTransacao.data_transacao
         });
       } else {
@@ -184,6 +187,7 @@ export const TransactionForm = ({
       total_parcelas: 1,
       parcela_atual: 1,
       status_pagamento: "pago",
+      status_recebimento: "recebido",
       data_vencimento: ""
     });
   };
@@ -289,6 +293,11 @@ export const TransactionForm = ({
               dataParcela.setMonth(dataParcela.getMonth() + (i - 1));
               bancoId = null;
               cartaoId = null;
+            // Para receitas pendentes, não associar banco
+            } else if (formData.tipo === "receita" && formData.status_recebimento === "pendente") {
+              dataParcela.setMonth(dataParcela.getMonth() + (i - 1));
+              bancoId = null;
+              cartaoId = null;
             } else {
               dataParcela.setMonth(dataParcela.getMonth() + (i - 1));
             }
@@ -314,9 +323,12 @@ export const TransactionForm = ({
 
           if (error) throw error;
 
-          // Atualizar saldo do banco apenas se for pago
-          if (formData.status_pagamento === "pago" && formData.banco_id) {
-            await updateSaldoBanco(formData.banco_id, formData.valor, formData.tipo);
+          // Atualizar saldo do banco
+          if ((formData.status_pagamento === "pago" && formData.tipo === "despesa") || 
+              (formData.status_recebimento === "recebido" && formData.tipo === "receita")) {
+            if (formData.banco_id) {
+              await updateSaldoBanco(formData.banco_id, formData.valor, formData.tipo);
+            }
           }
         } else {
           // Transação única
@@ -329,6 +341,12 @@ export const TransactionForm = ({
             if (formData.data_vencimento) {
               dataTransacao = formData.data_vencimento;
             }
+            bancoId = null;
+            cartaoId = null;
+          }
+          
+          // Para receitas pendentes
+          if (formData.tipo === "receita" && formData.status_recebimento === "pendente") {
             bancoId = null;
             cartaoId = null;
           }
@@ -365,14 +383,19 @@ export const TransactionForm = ({
 
           if (error) throw error;
 
-          // Atualizar saldo do banco apenas se for pago
-          if (formData.status_pagamento === "pago" && bancoId) {
-            await updateSaldoBanco(bancoId, formData.valor, formData.tipo);
+          // Atualizar saldo do banco
+          if ((formData.status_pagamento === "pago" && formData.tipo === "despesa") || 
+              (formData.status_recebimento === "recebido" && formData.tipo === "receita")) {
+            if (bancoId) {
+              await updateSaldoBanco(bancoId, formData.valor, formData.tipo);
+            }
           }
         }
 
         // Atualizar limite do cartão se necessário usando executeCartaoOperation
-        if (formData.status_pagamento === "pago" && formData.cartao_credito_id) {
+        if (((formData.status_pagamento === "pago" && formData.tipo === "despesa") || 
+             (formData.status_recebimento === "recebido" && formData.tipo === "receita")) && 
+            formData.cartao_credito_id) {
           await executeCartaoOperation(
             () => Promise.resolve({ sucesso: true }),
             formData.cartao_credito_id,
@@ -528,6 +551,31 @@ export const TransactionForm = ({
               </div>
             )}
 
+            {/* Status do Recebimento (apenas para receitas) */}
+            {formData.tipo === "receita" && !editingTransacao && (
+              <div className="space-y-3 md:col-span-2">
+                <Label>Status do Recebimento</Label>
+                <RadioGroup 
+                  value={formData.status_recebimento} 
+                  onValueChange={(value) => setFormData({ 
+                    ...formData, 
+                    status_recebimento: value,
+                    banco_id: value === "pendente" ? "" : formData.banco_id
+                  })}
+                  className="flex space-x-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="recebido" id="recebido" />
+                    <Label htmlFor="recebido">Recebido</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="pendente" id="receita-pendente" />
+                    <Label htmlFor="receita-pendente">Pendente</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            )}
+
             {/* Data de Vencimento (apenas para despesas pendentes) */}
             {formData.tipo === "despesa" && formData.status_pagamento === "pendente" && (
               <div className="space-y-2">
@@ -541,8 +589,9 @@ export const TransactionForm = ({
               </div>
             )}
 
-            {/* Banco (apenas se pago ou for receita) */}
-            {(formData.status_pagamento === "pago" || formData.tipo === "receita") && (
+            {/* Banco (apenas se pago/recebido ou for receita recebida) */}
+            {((formData.tipo === "despesa" && formData.status_pagamento === "pago") || 
+              (formData.tipo === "receita" && formData.status_recebimento === "recebido")) && (
               <div className="space-y-2">
                 <Label>Conta</Label>
                 <Select 

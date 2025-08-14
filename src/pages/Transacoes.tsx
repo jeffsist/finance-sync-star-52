@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { TransactionFilters } from "@/components/TransactionFilters";
 import { TransactionForm } from "@/components/TransactionForm";
 import { ModalConfirmarPagamento } from "@/components/ModalConfirmarPagamento";
+import { ModalConfirmarRecebimento } from "@/components/ModalConfirmarRecebimento";
 import { pagarDespesa } from "@/hooks/usePagamentoDespesa";
 import { updateCartaoLimiteUsado } from "@/hooks/useCartaoUpdater";
 import { useCartaoOperations } from "@/hooks/useCartaoOperations";
@@ -89,6 +90,10 @@ const Transacoes = () => {
   const [modalPagamento, setModalPagamento] = useState<{
     isOpen: boolean;
     despesa?: Transacao;
+  }>({ isOpen: false });
+  const [modalRecebimento, setModalRecebimento] = useState<{
+    isOpen: boolean;
+    receita?: Transacao;
   }>({ isOpen: false });
   const [filters, setFilters] = useState<FilterState>({
     searchText: "",
@@ -235,6 +240,10 @@ const Transacoes = () => {
     setModalPagamento({ isOpen: true, despesa });
   };
 
+  const handleMarcarRecebida = (receita: Transacao) => {
+    setModalRecebimento({ isOpen: true, receita });
+  };
+
   const handleConfirmarPagamento = async (
     contaId: string,
     metodoPagamento: string,
@@ -273,6 +282,82 @@ const Transacoes = () => {
       toast({
         title: "Erro",
         description: "Erro interno no pagamento",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleConfirmarRecebimento = async (
+    contaId: string,
+    observacoes?: string
+  ) => {
+    if (!modalRecebimento.receita) return;
+
+    try {
+      // Atualizar a receita para associar ao banco
+      const { error: updateError } = await supabase
+        .from("transacoes")
+        .update({
+          banco_id: contaId,
+          observacoes: observacoes || modalRecebimento.receita.observacoes
+        })
+        .eq("id", modalRecebimento.receita.id);
+
+      if (updateError) {
+        console.error("Erro ao atualizar receita:", updateError);
+        toast({
+          title: "Erro",
+          description: "Erro ao confirmar recebimento",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Atualizar o saldo do banco
+      const { data: banco, error: bancoError } = await supabase
+        .from("bancos")
+        .select("saldo_atual")
+        .eq("id", contaId)
+        .single();
+
+      if (bancoError) {
+        console.error("Erro ao buscar banco:", bancoError);
+        toast({
+          title: "Erro",
+          description: "Erro ao atualizar saldo do banco",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const novoSaldo = banco.saldo_atual + modalRecebimento.receita.valor;
+      const { error: saldoError } = await supabase
+        .from("bancos")
+        .update({ saldo_atual: novoSaldo })
+        .eq("id", contaId);
+
+      if (saldoError) {
+        console.error("Erro ao atualizar saldo:", saldoError);
+        toast({
+          title: "Erro",
+          description: "Erro ao atualizar saldo do banco",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Sucesso",
+        description: "Receita recebida com sucesso",
+      });
+
+      setModalRecebimento({ isOpen: false });
+      fetchTransacoes();
+    } catch (error) {
+      console.error("Erro ao confirmar recebimento:", error);
+      toast({
+        title: "Erro",
+        description: "Erro interno no recebimento",
         variant: "destructive",
       });
     }
@@ -620,6 +705,17 @@ const Transacoes = () => {
                             Pagar
                           </Button>
                         )}
+                        {isPendente(transacao) && transacao.tipo === "receita" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMarcarRecebida(transacao)}
+                            className="text-xs h-8"
+                          >
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Receber
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -692,6 +788,19 @@ const Transacoes = () => {
         editingTransacao={editingTransacao}
         onSuccess={fetchTransacoes}
       />
+
+      {/* Modal de Recebimento */}
+      {modalRecebimento.receita && (
+        <ModalConfirmarRecebimento
+          isOpen={modalRecebimento.isOpen}
+          onClose={() => setModalRecebimento({ isOpen: false })}
+          onConfirm={handleConfirmarRecebimento}
+          titulo="Confirmar Recebimento"
+          descricao={`Confirme o recebimento da receita: ${modalRecebimento.receita.descricao}`}
+          valor={modalRecebimento.receita.valor}
+          receitaId={modalRecebimento.receita.id}
+        />
+      )}
 
       {/* Modal de Pagamento */}
       {modalPagamento.despesa && (
