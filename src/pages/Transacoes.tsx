@@ -12,19 +12,20 @@ import { ModalConfirmarPagamento } from "@/components/ModalConfirmarPagamento";
 import { pagarDespesa } from "@/hooks/usePagamentoDespesa";
 import { updateCartaoLimiteUsado } from "@/hooks/useCartaoUpdater";
 import { useCartaoOperations } from "@/hooks/useCartaoOperations";
-import { 
-  Plus, 
-  ArrowLeft,
-  TrendingUp,
-  TrendingDown,
-  Edit2,
-  Trash2,
-  Calendar,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Filter
-} from "lucide-react";
+  import { 
+    Plus, 
+    ArrowLeft,
+    TrendingUp,
+    TrendingDown,
+    Edit2,
+    Trash2,
+    Calendar,
+    AlertCircle,
+    CheckCircle,
+    Clock,
+    Filter,
+    Trash
+  } from "lucide-react";
 
 interface Transacao {
   id: string;
@@ -313,6 +314,67 @@ const Transacoes = () => {
     }
   };
 
+  const handleDeleteGroup = async (transacao: Transacao) => {
+    if (!transacao.total_parcelas || transacao.total_parcelas <= 1) {
+      toast({
+        title: "Aviso",
+        description: "Esta transação não faz parte de um grupo de parcelas",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Extrair a descrição base removendo a parte "(X/Y)"
+    const descricaoBase = transacao.descricao.replace(/ \(\d+\/\d+\)$/, '');
+    const totalParcelas = transacao.total_parcelas;
+
+    if (!confirm(`Tem certeza que deseja excluir TODAS as ${totalParcelas} parcelas de "${descricaoBase}"?`)) return;
+
+    try {
+      await executeCartaoOperation(
+        async () => {
+          // Buscar todas as transações do mesmo grupo
+          const { data: transacoesGrupo, error: searchError } = await supabase
+            .from("transacoes")
+            .select("id")
+            .eq("user_id", user?.id)
+            .eq("total_parcelas", totalParcelas)
+            .like("descricao", `${descricaoBase} (%`);
+
+          if (searchError) throw searchError;
+
+          if (!transacoesGrupo || transacoesGrupo.length === 0) {
+            throw new Error("Nenhuma transação do grupo encontrada");
+          }
+
+          // Excluir todas as transações do grupo
+          const { error: deleteError } = await supabase
+            .from("transacoes")
+            .delete()
+            .in("id", transacoesGrupo.map(t => t.id));
+
+          if (deleteError) throw deleteError;
+
+          return { sucesso: true };
+        },
+        transacao.cartao_credito_id,
+        fetchTransacoes
+      );
+
+      toast({
+        title: "Sucesso",
+        description: `Todas as ${totalParcelas} parcelas foram excluídas com sucesso`,
+      });
+    } catch (error) {
+      console.error("Erro ao excluir grupo:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao excluir grupo de transações",
+        variant: "destructive",
+      });
+    }
+  };
+
   const isPendente = (transacao: Transacao) => {
     return !transacao.banco_id && !transacao.cartao_credito_id;
   };
@@ -574,6 +636,17 @@ const Transacoes = () => {
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
+                        {transacao.total_parcelas && transacao.total_parcelas > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteGroup(transacao)}
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            title={`Excluir todas as ${transacao.total_parcelas} parcelas`}
+                          >
+                            <Trash className="h-3 w-3" />
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
