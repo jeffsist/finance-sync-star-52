@@ -10,6 +10,7 @@ import { TransactionFilters } from "@/components/TransactionFilters";
 import { TransactionForm } from "@/components/TransactionForm";
 import { ModalConfirmarPagamento } from "@/components/ModalConfirmarPagamento";
 import { ModalConfirmarRecebimento } from "@/components/ModalConfirmarRecebimento";
+import { ResumoTransacoesFiltradas } from "@/components/ResumoTransacoesFiltradas";
 import { pagarDespesa } from "@/hooks/usePagamentoDespesa";
 import { updateCartaoLimiteUsado } from "@/hooks/useCartaoUpdater";
 import { useCartaoOperations } from "@/hooks/useCartaoOperations";
@@ -536,6 +537,9 @@ const Transacoes = () => {
           onFiltersChange={setFilters}
           activeFilters={filters}
         />
+
+        {/* Resumo das Transações Filtradas */}
+        <ResumoTransacoesFiltradas transacoes={transacoesFiltradas} />
 
         {/* Resumo de Despesas Pendentes */}
         {getDespesasPendentes().length > 0 && (
