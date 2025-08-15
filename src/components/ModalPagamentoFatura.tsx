@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { pagarFatura } from "@/hooks/usePagamentoFatura";
 import { Wallet, CreditCard, AlertCircle, CheckCircle } from "lucide-react";
+import { ComprovantesUpload } from "@/components/ComprovantesUpload";
+import type { CompressedImageResult } from "@/utils/imageCompression";
 
 interface ModalPagamentoFaturaProps {
   open: boolean;
@@ -41,6 +43,7 @@ const ModalPagamentoFatura = ({
   const [valorPagamento, setValorPagamento] = useState(cartao.valorFatura);
   const [loading, setLoading] = useState(false);
   const [loadingBancos, setLoadingBancos] = useState(true);
+  const [comprovantes, setComprovantes] = useState<CompressedImageResult[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -236,6 +239,12 @@ const ModalPagamentoFatura = ({
               </div>
             </div>
           )}
+
+          <ComprovantesUpload 
+            onImagesChange={setComprovantes}
+            maxImages={3}
+            className="border-t pt-4"
+          />
 
           {/* Botões */}
           <div className="flex space-x-2 pt-4">

@@ -20,6 +20,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Wallet, CreditCard, Banknote, Smartphone } from "lucide-react";
+import { ComprovantesUpload } from "@/components/ComprovantesUpload";
+import type { CompressedImageResult } from "@/utils/imageCompression";
 
 interface Banco {
   id: string;
@@ -67,6 +69,7 @@ export const ModalConfirmarPagamento = ({
   const [cartaoSelecionado, setCartaoSelecionado] = useState<string>("");
   const [metodoSelecionado, setMetodoSelecionado] = useState<string>("");
   const [observacoes, setObservacoes] = useState<string>("");
+  const [comprovantes, setComprovantes] = useState<CompressedImageResult[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -293,6 +296,12 @@ export const ModalConfirmarPagamento = ({
               rows={3}
             />
           </div>
+
+          <ComprovantesUpload 
+            onImagesChange={setComprovantes}
+            maxImages={3}
+            className="border-t pt-4"
+          />
 
           <div className="flex space-x-2 pt-4">
             <Button variant="outline" onClick={handleClose} className="flex-1">

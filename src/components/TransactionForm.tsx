@@ -12,6 +12,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { updateCartaoLimiteUsado } from "@/hooks/useCartaoUpdater";
 import { useCartaoOperations } from "@/hooks/useCartaoOperations";
+import { ComprovantesUpload } from "@/components/ComprovantesUpload";
+import type { CompressedImageResult } from "@/utils/imageCompression";
 
 interface Transacao {
   id: string;
@@ -98,6 +100,7 @@ export const TransactionForm = ({
     status_recebimento: "recebido",
     data_vencimento: ""
   });
+  const [comprovantes, setComprovantes] = useState<CompressedImageResult[]>([]);
   const { toast } = useToast();
   const { executeCartaoOperation } = useCartaoOperations();
 
@@ -438,7 +441,7 @@ export const TransactionForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
         <DialogHeader>
           <DialogTitle>
             {editingTransacao ? "Editar Transação" : "Nova Transação"}
@@ -449,7 +452,7 @@ export const TransactionForm = ({
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Descrição */}
             <div className="space-y-2">
               <Label htmlFor="descricao">Descrição</Label>
@@ -527,7 +530,7 @@ export const TransactionForm = ({
 
             {/* Status do Pagamento (apenas para despesas) */}
             {formData.tipo === "despesa" && !editingTransacao && (
-              <div className="space-y-3 md:col-span-2">
+              <div className="space-y-3 sm:col-span-2">
                 <Label>Status do Pagamento</Label>
                 <RadioGroup 
                   value={formData.status_pagamento} 
@@ -537,7 +540,7 @@ export const TransactionForm = ({
                     banco_id: value === "pendente" ? "" : formData.banco_id,
                     cartao_credito_id: value === "pendente" ? "" : formData.cartao_credito_id
                   })}
-                  className="flex space-x-6"
+                  className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6"
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="pago" id="pago" />
@@ -553,7 +556,7 @@ export const TransactionForm = ({
 
             {/* Status do Recebimento (apenas para receitas) */}
             {formData.tipo === "receita" && !editingTransacao && (
-              <div className="space-y-3 md:col-span-2">
+              <div className="space-y-3 sm:col-span-2">
                 <Label>Status do Recebimento</Label>
                 <RadioGroup 
                   value={formData.status_recebimento} 
@@ -562,7 +565,7 @@ export const TransactionForm = ({
                     status_recebimento: value,
                     banco_id: value === "pendente" ? "" : formData.banco_id
                   })}
-                  className="flex space-x-6"
+                  className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6"
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="recebido" id="recebido" />
@@ -690,8 +693,15 @@ export const TransactionForm = ({
             />
           </div>
 
+          {/* Upload de Comprovantes */}
+          <ComprovantesUpload 
+            onImagesChange={setComprovantes}
+            maxImages={3}
+            className="border-t pt-4"
+          />
+
           {/* Botões */}
-          <div className="flex space-x-2 pt-4">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose} className="flex-1">
               Cancelar
             </Button>

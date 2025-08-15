@@ -10,6 +10,7 @@ import FaturasCartoesDashboard from "@/components/FaturasCartoesDashboard";
 import ModalConfiguracoes from "@/components/ModalConfiguracoes";
 import ResumoContasBanco from "@/components/ResumoContasBanco";
 import ResumoMetas from "@/components/ResumoMetas";
+import { MobileHeader } from "@/components/MobileHeader";
 import { 
   Wallet, 
   CreditCard, 
@@ -296,41 +297,31 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-              <Wallet className="h-6 w-6" />
-            </div>
-            <h1 className="text-2xl font-bold text-primary">FinControle</h1>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-muted-foreground">
-              Olá, {user?.user_metadata?.nome || user?.email}
-            </span>
-            <ModalConfiguracoes user={user}>
-              <Button variant="outline" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Configurações
-              </Button>
-            </ModalConfiguracoes>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
+      <MobileHeader title="FinControle">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-muted-foreground hidden sm:block">
+            Olá, {user?.user_metadata?.nome || user?.email}
+          </span>
+          <ModalConfiguracoes user={user}>
+            <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Configurações</span>
             </Button>
-          </div>
+          </ModalConfiguracoes>
+          <Button variant="outline" size="sm" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Sair</span>
+          </Button>
         </div>
-      </header>
+      </MobileHeader>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Navegação de Mês */}
         <div className="flex items-center justify-center mb-6">
-          <Card className="w-fit">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-4">
+          <Card className="w-full sm:w-fit">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between sm:justify-center sm:space-x-4">
                 <Button 
                   variant="outline" 
                   size="icon"
@@ -338,14 +329,14 @@ const Dashboard = () => {
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <div className="text-center min-w-[200px]">
-                  <h3 className="text-lg font-semibold">
+                <div className="text-center min-w-[160px] sm:min-w-[200px]">
+                  <h3 className="text-base sm:text-lg font-semibold">
                     {mesSelecionado.toLocaleDateString('pt-BR', { 
                       month: 'long', 
                       year: 'numeric' 
                     }).replace(/^\w/, c => c.toUpperCase())}
                   </h3>
-                  <p className="text-sm text-muted-foreground">Visualização mensal</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Visualização mensal</p>
                 </div>
                 <Button 
                   variant="outline" 
@@ -360,7 +351,7 @@ const Dashboard = () => {
         </div>
 
         {/* Projeção de Fluxo de Caixa */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Saldo Atual</CardTitle>
@@ -427,7 +418,7 @@ const Dashboard = () => {
         />
 
         {/* Ações Rápidas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate("/transacoes")}
@@ -538,7 +529,7 @@ const Dashboard = () => {
         </div>
 
         {/* Resumo de Metas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8">
           <ResumoMetas />
           <div className="grid grid-cols-1 gap-6">
             <ContasPendentes user={user} mesSelecionado={mesSelecionado} />
@@ -553,7 +544,7 @@ const Dashboard = () => {
               Gerencie suas faturas de cartões e despesas pendentes
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <FaturasCartoesDashboard user={user} mesSelecionado={mesSelecionado} />
             <DespesasPendentes user={user} mesSelecionado={mesSelecionado} />
           </div>
@@ -573,33 +564,33 @@ const Dashboard = () => {
           <CardContent>
             {transacoesRecentes.length > 0 ? (
               <div className="space-y-3">
-                {transacoesRecentes.map((transacao) => (
-                  <div key={transacao.id} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
-                        transacao.tipo === 'receita' ? 'bg-income/10 text-income' : 'bg-expense/10 text-expense'
-                      }`}>
-                        {transacao.tipo === 'receita' ? (
-                          <TrendingUp className="h-4 w-4" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{transacao.descricao}</p>
-                        <p className="text-xs text-muted-foreground flex items-center">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {formatDate(transacao.data_transacao)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`text-sm font-bold ${
-                      transacao.tipo === 'receita' ? 'text-income' : 'text-expense'
-                    }`}>
-                      {transacao.tipo === 'receita' ? '+' : '-'} {formatCurrency(transacao.valor)}
-                    </div>
-                  </div>
-                ))}
+                 {transacoesRecentes.map((transacao) => (
+                   <div key={transacao.id} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                     <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+                       <div className={`p-1.5 sm:p-2 rounded-lg ${
+                         transacao.tipo === 'receita' ? 'bg-income/10 text-income' : 'bg-expense/10 text-expense'
+                       }`}>
+                         {transacao.tipo === 'receita' ? (
+                           <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                         ) : (
+                           <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4" />
+                         )}
+                       </div>
+                       <div className="min-w-0 flex-1">
+                         <p className="font-medium text-sm truncate">{transacao.descricao}</p>
+                         <p className="text-xs text-muted-foreground flex items-center">
+                           <Calendar className="h-3 w-3 mr-1" />
+                           {formatDate(transacao.data_transacao)}
+                         </p>
+                       </div>
+                     </div>
+                     <div className={`text-xs sm:text-sm font-bold text-right ${
+                       transacao.tipo === 'receita' ? 'text-income' : 'text-expense'
+                     }`}>
+                       {transacao.tipo === 'receita' ? '+' : '-'} {formatCurrency(transacao.valor)}
+                     </div>
+                   </div>
+                 ))}
                 <div className="text-center pt-3">
                   <Button variant="outline" size="sm" onClick={() => navigate("/transacoes")}>
                     Ver todas as transações
