@@ -55,25 +55,25 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
   const totalMovimentacoes = movimentacoes.length;
 
   return (
-    <div className="space-y-6 mb-8">
+    <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
       {/* Título do período */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Resumo do Período</h2>
-        <div className="flex items-center justify-center text-muted-foreground">
-          <Calendar className="h-4 w-4 mr-2" />
+        <h2 className="text-xl sm:text-2xl font-bold mb-2">Resumo do Período</h2>
+        <div className="flex items-center justify-center text-muted-foreground text-sm">
+          <Calendar className="h-3 sm:h-4 w-3 sm:w-4 mr-2" />
           <span>{formatPeriod()}</span>
         </div>
       </div>
 
       {/* Cards de resumo */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Receitas</CardTitle>
             <TrendingUp className="h-4 w-4 text-income" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-income">{formatCurrency(totalReceitas)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold text-income">{formatCurrency(totalReceitas)}</div>
             <p className="text-xs text-muted-foreground">
               {receitas.length} transação{receitas.length !== 1 ? 'ões' : ''}
             </p>
@@ -85,8 +85,8 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
             <CardTitle className="text-sm font-medium">Despesas</CardTitle>
             <TrendingDown className="h-4 w-4 text-expense" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-expense">{formatCurrency(totalDespesas)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold text-expense">{formatCurrency(totalDespesas)}</div>
             <p className="text-xs text-muted-foreground">
               {despesas.length} transação{despesas.length !== 1 ? 'ões' : ''}
             </p>
@@ -98,8 +98,8 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
             <CardTitle className="text-sm font-medium">Cartão de Crédito</CardTitle>
             <CreditCard className="h-4 w-4 text-warning" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-warning">{formatCurrency(totalComprasCartao)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold text-warning">{formatCurrency(totalComprasCartao)}</div>
             <p className="text-xs text-muted-foreground">
               {comprasCartao.length} compra{comprasCartao.length !== 1 ? 's' : ''}
             </p>
@@ -111,8 +111,8 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
             <CardTitle className="text-sm font-medium">Pagto. Faturas</CardTitle>
             <Receipt className="h-4 w-4 text-info" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-info">{formatCurrency(totalPagamentosFatura)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold text-info">{formatCurrency(totalPagamentosFatura)}</div>
             <p className="text-xs text-muted-foreground">
               {pagamentosFatura.length} pagamento{pagamentosFatura.length !== 1 ? 's' : ''}
             </p>
@@ -121,19 +121,19 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
       </div>
 
       {/* Resumo consolidado */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg">Saldo do Período</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Saldo do Período</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${saldoPeriodo >= 0 ? 'text-income' : 'text-expense'}`}>
+            <div className={`text-2xl sm:text-3xl font-bold ${saldoPeriodo >= 0 ? 'text-income' : 'text-expense'}`}>
               {saldoPeriodo >= 0 ? '+' : ''}{formatCurrency(saldoPeriodo)}
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-2">
               Receitas - Despesas - Compras - Pagamentos
             </p>
-            <div className="mt-4 space-y-2 text-sm">
+            <div className="mt-3 sm:mt-4 space-y-1 sm:space-y-2 text-xs sm:text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Receitas:</span>
                 <span className="text-income">+{formatCurrency(totalReceitas)}</span>
@@ -159,14 +159,14 @@ const ResumoMovimentacoes = ({ movimentacoes, filtros }: ResumoMovimentacoesProp
             <CardTitle className="text-sm font-medium">Total de Movimentações</CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{totalMovimentacoes}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-2xl sm:text-3xl font-bold">{totalMovimentacoes}</div>
             <p className="text-xs text-muted-foreground">
               Movimentações no período
             </p>
             
             {/* Distribuição por status */}
-            <div className="mt-4 space-y-1 text-xs">
+            <div className="mt-3 sm:mt-4 space-y-1 text-xs">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Concluídas:</span>
                 <span>{movimentacoes.filter(m => m.status === 'concluida').length}</span>

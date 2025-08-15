@@ -98,25 +98,25 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
   const usageLevel = getUsageLevel(resumo.percentualUso);
 
   return (
-    <div className="space-y-6 mb-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Resumo Geral dos Cartões</h2>
+    <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-xl sm:text-2xl font-bold">Resumo Geral dos Cartões</h2>
         {resumo.percentualUso >= 80 && (
           <div className="flex items-center text-expense">
-            <AlertTriangle className="h-5 w-5 mr-2" />
-            <span className="text-sm font-medium">Uso Alto - Atenção!</span>
+            <AlertTriangle className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+            <span className="text-xs sm:text-sm font-medium">Uso Alto - Atenção!</span>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Limite Total</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(resumo.limiteTotal)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-xl sm:text-2xl font-bold">{formatCurrency(resumo.limiteTotal)}</div>
             <p className="text-xs text-muted-foreground">
               {resumo.cartoesAtivos} cartão{resumo.cartoesAtivos !== 1 ? 'ões' : ''} ativo{resumo.cartoesAtivos !== 1 ? 's' : ''}
             </p>
@@ -128,8 +128,8 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
             <CardTitle className="text-sm font-medium">Limite Usado</CardTitle>
             <DollarSign className="h-4 w-4 text-expense" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-expense">{formatCurrency(resumo.limiteUsado)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-xl sm:text-2xl font-bold text-expense">{formatCurrency(resumo.limiteUsado)}</div>
             <p className="text-xs text-muted-foreground">
               Valor total utilizado
             </p>
@@ -141,8 +141,8 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
             <CardTitle className="text-sm font-medium">Limite Disponível</CardTitle>
             <DollarSign className="h-4 w-4 text-success" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">{formatCurrency(resumo.limiteDisponivel)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-xl sm:text-2xl font-bold text-success">{formatCurrency(resumo.limiteDisponivel)}</div>
             <p className="text-xs text-muted-foreground">
               Disponível para uso
             </p>
@@ -154,8 +154,8 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
             <CardTitle className="text-sm font-medium">Uso Geral</CardTitle>
             <Percent className={`h-4 w-4 ${getUsageColor(resumo.percentualUso)}`} />
           </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${getUsageColor(resumo.percentualUso)}`}>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className={`text-xl sm:text-2xl font-bold ${getUsageColor(resumo.percentualUso)}`}>
               {resumo.percentualUso.toFixed(1)}%
             </div>
             <p className={`text-xs font-medium ${usageLevel.color}`}>
@@ -167,18 +167,18 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
 
       {/* Barra de Progresso Geral */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Utilização Geral dos Cartões</CardTitle>
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="text-base sm:text-lg">Utilização Geral dos Cartões</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3 sm:space-y-4 pt-0">
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 text-xs sm:text-sm">
               <span>Usado: {formatCurrency(resumo.limiteUsado)}</span>
               <span>Disponível: {formatCurrency(resumo.limiteDisponivel)}</span>
             </div>
             <Progress 
               value={resumo.percentualUso} 
-              className="h-3"
+              className="h-2 sm:h-3"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>0%</span>
@@ -191,8 +191,8 @@ const ResumoGeralCartoes = ({ userId }: ResumoGeralCartoesProps) => {
 
           {resumo.cartoesAtivos === 0 && (
             <div className="text-center py-4">
-              <CreditCard className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm text-muted-foreground">Nenhum cartão ativo encontrado</p>
+              <CreditCard className="h-6 sm:h-8 w-6 sm:w-8 mx-auto mb-2 opacity-50" />
+              <p className="text-xs sm:text-sm text-muted-foreground">Nenhum cartão ativo encontrado</p>
             </div>
           )}
         </CardContent>

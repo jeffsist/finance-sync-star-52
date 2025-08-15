@@ -94,16 +94,16 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Resumo Geral */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Saldo Total</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(resumo.saldoTotal)}</div>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className="text-xl sm:text-2xl font-bold">{formatCurrency(resumo.saldoTotal)}</div>
             <p className="text-xs text-muted-foreground">
               {resumo.contasAtivas} conta{resumo.contasAtivas !== 1 ? 's' : ''} ativa{resumo.contasAtivas !== 1 ? 's' : ''}
             </p>
@@ -119,8 +119,8 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
               <TrendingDown className="h-4 w-4 text-expense" />
             )}
           </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${resumo.variacaoTotal >= 0 ? 'text-income' : 'text-expense'}`}>
+          <CardContent className="pb-3 sm:pb-6">
+            <div className={`text-xl sm:text-2xl font-bold ${resumo.variacaoTotal >= 0 ? 'text-income' : 'text-expense'}`}>
               {formatCurrency(resumo.variacaoTotal)}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -129,13 +129,13 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={onNavigateToContas}>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow sm:col-span-2 lg:col-span-1" onClick={onNavigateToContas}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Gerenciar</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
+          <CardContent className="pb-3 sm:pb-6">
+            <Button variant="outline" className="w-full" size="sm">
               Ver Todas as Contas
             </Button>
           </CardContent>
@@ -145,32 +145,32 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
       {/* Lista de Bancos */}
       {bancos.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Suas Contas Bancárias</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h3 className="text-lg font-semibold mb-3 sm:mb-4">Suas Contas Bancárias</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {bancos.slice(0, 6).map((banco) => {
               const variacao = banco.saldo_atual - banco.saldo_inicial;
               
               return (
                 <Card key={banco.id} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={onNavigateToContas}>
-                  <CardContent className="p-4">
+                  <CardContent className="p-3 sm:p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 min-w-0 flex-1">
                         {getTipoIcon(banco.tipo)}
-                        <span className="font-medium">{banco.nome}</span>
+                        <span className="font-medium truncate">{banco.nome}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded whitespace-nowrap ml-2">
                         {banco.tipo}
                       </span>
                     </div>
                     
                     <div className="space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Saldo Atual:</span>
-                        <span className="font-semibold">{formatCurrency(banco.saldo_atual)}</span>
+                        <span className="font-semibold text-sm sm:text-base">{formatCurrency(banco.saldo_atual)}</span>
                       </div>
                       
                       {variacao !== 0 && (
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                           <span className="text-sm text-muted-foreground">Variação:</span>
                           <span className={`text-sm font-medium ${variacao >= 0 ? 'text-income' : 'text-expense'}`}>
                             {variacao >= 0 ? '+' : ''}{formatCurrency(variacao)}
@@ -185,8 +185,8 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
           </div>
           
           {bancos.length > 6 && (
-            <div className="text-center mt-4">
-              <Button variant="outline" onClick={onNavigateToContas}>
+            <div className="text-center mt-3 sm:mt-4">
+              <Button variant="outline" onClick={onNavigateToContas} size="sm">
                 Ver mais {bancos.length - 6} conta{bancos.length - 6 !== 1 ? 's' : ''}
               </Button>
             </div>

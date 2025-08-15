@@ -253,32 +253,34 @@ const Movimentacoes = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-              <RefreshCw className="h-6 w-6" />
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="shrink-0">
+                <ArrowLeft className="h-4 sm:h-5 w-4 sm:w-5" />
+              </Button>
+              <div className="bg-primary text-primary-foreground p-1.5 sm:p-2 rounded-lg shrink-0">
+                <RefreshCw className="h-4 sm:h-6 w-4 sm:w-6" />
+              </div>
+              <h1 className="text-lg sm:text-2xl font-bold text-primary truncate">Movimentações</h1>
             </div>
-            <h1 className="text-2xl font-bold text-primary">Movimentações</h1>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
-              <Filter className="h-4 w-4 mr-2" />
-              Filtros
-            </Button>
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="h-4 w-4 mr-2" />
-              Exportar
-            </Button>
+            
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+              <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
+                <Filter className="h-3 sm:h-4 w-3 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Filtros</span>
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleExport}>
+                <Download className="h-3 sm:h-4 w-3 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Exportar</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* Resumo do Período */}
         <ResumoMovimentacoes movimentacoes={movimentacoes} filtros={filtros} />
 
@@ -292,26 +294,26 @@ const Movimentacoes = () => {
         )}
 
         {/* Busca Rápida */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
+        <Card className="mb-4 sm:mb-6">
+          <CardContent className="p-3 sm:p-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Buscar por descrição, origem ou categoria..."
                 value={filtros.busca}
                 onChange={(e) => setFiltros({ ...filtros, busca: e.target.value })}
-                className="pl-10"
+                className="pl-10 text-sm sm:text-base"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* Lista de Movimentações */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="text-muted-foreground mt-2">Carregando movimentações...</p>
+            <div className="text-center py-8 sm:py-12">
+              <div className="animate-spin rounded-full h-6 sm:h-8 w-6 sm:w-8 border-b-2 border-primary mx-auto"></div>
+              <p className="text-muted-foreground mt-2 text-sm sm:text-base">Carregando movimentações...</p>
             </div>
           ) : movimentacoes.length > 0 ? (
             movimentacoes.map((movimentacao) => (
@@ -319,13 +321,13 @@ const Movimentacoes = () => {
             ))
           ) : (
             <Card>
-              <CardContent className="text-center py-12">
-                <Wallet className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-muted-foreground mb-2">Nenhuma movimentação encontrada</p>
-                <p className="text-sm text-muted-foreground">
+              <CardContent className="text-center py-8 sm:py-12">
+                <Wallet className="h-8 sm:h-12 w-8 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+                <p className="text-muted-foreground mb-2 text-sm sm:text-base">Nenhuma movimentação encontrada</p>
+                <p className="text-xs sm:text-sm text-muted-foreground px-4">
                   Tente ajustar os filtros ou selecionar um período diferente
                 </p>
-                <Button variant="outline" onClick={limparFiltros} className="mt-4">
+                <Button variant="outline" onClick={limparFiltros} className="mt-3 sm:mt-4" size="sm">
                   Limpar Filtros
                 </Button>
               </CardContent>

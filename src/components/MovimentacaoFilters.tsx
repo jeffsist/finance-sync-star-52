@@ -28,42 +28,44 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
   };
 
   return (
-    <Card className="mb-6">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-lg">Filtros Avançados</CardTitle>
+    <Card className="mb-4 sm:mb-6">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-3 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg">Filtros Avançados</CardTitle>
         <Button variant="outline" size="sm" onClick={onLimparFiltros}>
-          <X className="h-4 w-4 mr-2" />
+          <X className="h-3 sm:h-4 w-3 sm:w-4 mr-1 sm:mr-2" />
           Limpar Filtros
         </Button>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <CardContent className="space-y-3 sm:space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Período */}
           <div className="space-y-2">
-            <Label htmlFor="dataInicio">Data Início</Label>
+            <Label htmlFor="dataInicio" className="text-sm">Data Início</Label>
             <Input
               id="dataInicio"
               type="date"
               value={filtros.dataInicio}
               onChange={(e) => updateFiltro('dataInicio', e.target.value)}
+              className="text-sm"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dataFim">Data Fim</Label>
+            <Label htmlFor="dataFim" className="text-sm">Data Fim</Label>
             <Input
               id="dataFim"
               type="date"
               value={filtros.dataFim}
               onChange={(e) => updateFiltro('dataFim', e.target.value)}
+              className="text-sm"
             />
           </div>
 
           {/* Tipo de Movimentação */}
           <div className="space-y-2">
-            <Label>Tipo de Movimentação</Label>
+            <Label className="text-sm">Tipo de Movimentação</Label>
             <Select value={filtros.tipoMovimentacao} onValueChange={(value) => updateFiltro('tipoMovimentacao', value)}>
-              <SelectTrigger>
+              <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Todos os tipos" />
               </SelectTrigger>
               <SelectContent>
@@ -80,9 +82,9 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
 
           {/* Status */}
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label className="text-sm">Status</Label>
             <Select value={filtros.status} onValueChange={(value) => updateFiltro('status', value)}>
-              <SelectTrigger>
+              <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Todos os status" />
               </SelectTrigger>
               <SelectContent>
@@ -95,10 +97,10 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {/* Faixa de Valores */}
           <div className="space-y-2">
-            <Label htmlFor="valorMin">Valor Mínimo</Label>
+            <Label htmlFor="valorMin" className="text-sm">Valor Mínimo</Label>
             <Input
               id="valorMin"
               type="number"
@@ -106,11 +108,12 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
               placeholder="0,00"
               value={filtros.valorMin}
               onChange={(e) => updateFiltro('valorMin', e.target.value)}
+              className="text-sm"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="valorMax">Valor Máximo</Label>
+            <Label htmlFor="valorMax" className="text-sm">Valor Máximo</Label>
             <Input
               id="valorMax"
               type="number"
@@ -118,17 +121,19 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
               placeholder="999999,99"
               value={filtros.valorMax}
               onChange={(e) => updateFiltro('valorMax', e.target.value)}
+              className="text-sm"
             />
           </div>
         </div>
 
         {/* Atalhos de Período */}
         <div className="space-y-2">
-          <Label>Períodos Rápidos</Label>
-          <div className="flex flex-wrap gap-2">
+          <Label className="text-sm">Períodos Rápidos</Label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             <Button
               variant="outline"
               size="sm"
+              className="text-xs"
               onClick={() => {
                 const hoje = new Date();
                 setFiltros({ 
@@ -143,6 +148,7 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
             <Button
               variant="outline"
               size="sm"
+              className="text-xs"
               onClick={() => {
                 const hoje = new Date();
                 const semanaPassada = new Date(hoje.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -153,11 +159,12 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
                 });
               }}
             >
-              Últimos 7 dias
+              7 dias
             </Button>
             <Button
               variant="outline"
               size="sm"
+              className="text-xs"
               onClick={() => {
                 const hoje = new Date();
                 const mesPassado = new Date(hoje.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -168,11 +175,12 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
                 });
               }}
             >
-              Últimos 30 dias
+              30 dias
             </Button>
             <Button
               variant="outline"
               size="sm"
+              className="text-xs"
               onClick={() => {
                 const hoje = new Date();
                 const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
@@ -188,6 +196,7 @@ const MovimentacaoFilters = ({ filtros, setFiltros, onLimparFiltros }: Movimenta
             <Button
               variant="outline"
               size="sm"
+              className="text-xs sm:col-span-1 col-span-2"
               onClick={() => {
                 const hoje = new Date();
                 const mesPassado = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
