@@ -8,6 +8,7 @@ import ContasPendentes from "@/components/ContasPendentes";
 import DespesasPendentes from "@/components/DespesasPendentes";
 import FaturasCartoesDashboard from "@/components/FaturasCartoesDashboard";
 import ModalConfiguracoes from "@/components/ModalConfiguracoes";
+import ResumoContasBanco from "@/components/ResumoContasBanco";
 import { 
   Wallet, 
   CreditCard, 
@@ -18,7 +19,8 @@ import {
   LogOut,
   Calendar,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  RefreshCw
 } from "lucide-react";
 
 interface Transacao {
@@ -416,6 +418,12 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Resumo de Contas Bancárias */}
+        <ResumoContasBanco 
+          userId={user?.id || ''} 
+          onNavigateToContas={() => navigate("/contas")} 
+        />
+
         {/* Ações Rápidas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card 
@@ -474,6 +482,21 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>
                 Organize suas transações
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => navigate("/movimentacoes")}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <RefreshCw className="h-5 w-5 mr-2" />
+                Movimentações
+              </CardTitle>
+              <CardDescription>
+                Histórico completo do sistema
               </CardDescription>
             </CardHeader>
           </Card>

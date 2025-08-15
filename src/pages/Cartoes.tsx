@@ -20,6 +20,7 @@ import {
   Receipt
 } from "lucide-react";
 import FaturaCartao from "@/components/FaturaCartao";
+import ResumoGeralCartoes from "@/components/ResumoGeralCartoes";
 
 interface CartaoCredito {
   id: string;
@@ -373,6 +374,8 @@ const Cartoes = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Resumo Geral dos Cartões */}
+        <ResumoGeralCartoes userId={user?.id || ''} />
         {cartaoFatura ? (
           <FaturaCartao 
             cartao={cartaoFatura} 
