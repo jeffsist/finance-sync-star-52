@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import ContasPendentes from "@/components/ContasPendentes";
 import DespesasPendentes from "@/components/DespesasPendentes";
 import FaturasCartoesDashboard from "@/components/FaturasCartoesDashboard";
+import ModalConfiguracoes from "@/components/ModalConfiguracoes";
 import { 
   Wallet, 
   CreditCard, 
@@ -305,10 +306,12 @@ const Dashboard = () => {
             <span className="text-sm text-muted-foreground">
               Olá, {user?.user_metadata?.nome || user?.email}
             </span>
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurações
-            </Button>
+            <ModalConfiguracoes user={user}>
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Configurações
+              </Button>
+            </ModalConfiguracoes>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 mr-2" />
               Sair
