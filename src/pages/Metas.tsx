@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus, Target } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -47,6 +48,7 @@ const Metas = () => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<Categoria | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const mesAtual = new Date().getMonth() + 1;
   const anoAtual = new Date().getFullYear();
@@ -149,15 +151,27 @@ const Metas = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Metas e Limites</h1>
-          <p className="text-muted-foreground">
-            Configure metas de receita e limites de gastos por categoria
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
+              <Target className="h-6 w-6" />
+            </div>
+            <h1 className="text-2xl font-bold text-primary">Metas e Limites</h1>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8 space-y-6">
+        <p className="text-muted-foreground">
+          Configure metas de receita e limites de gastos por categoria
+        </p>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {categorias.map((categoria) => {
@@ -218,14 +232,15 @@ const Metas = () => {
         })}
       </div>
 
-      <ModalConfigurarMeta
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        categoria={categoriaSelecionada}
-        onMetaCriada={handleMetaCriada}
-        mesAtual={mesAtual}
-        anoAtual={anoAtual}
-      />
+        <ModalConfigurarMeta
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          categoria={categoriaSelecionada}
+          onMetaCriada={handleMetaCriada}
+          mesAtual={mesAtual}
+          anoAtual={anoAtual}
+        />
+      </main>
     </div>
   );
 };
