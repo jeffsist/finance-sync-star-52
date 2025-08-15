@@ -12,6 +12,7 @@ import Cartoes from "./pages/Cartoes";
 import Categorias from "./pages/Categorias";
 import ProjecaoFluxo from "./pages/ProjecaoFluxo";
 import Movimentacoes from "./pages/Movimentacoes";
+import Metas from "./pages/Metas";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/projecao-fluxo" element={<ProjecaoFluxo />} />
           <Route path="/movimentacoes" element={<Movimentacoes />} />
+          <Route path="/metas" element={<Metas />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

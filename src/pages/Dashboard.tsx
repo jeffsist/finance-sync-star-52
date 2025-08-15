@@ -9,6 +9,7 @@ import DespesasPendentes from "@/components/DespesasPendentes";
 import FaturasCartoesDashboard from "@/components/FaturasCartoesDashboard";
 import ModalConfiguracoes from "@/components/ModalConfiguracoes";
 import ResumoContasBanco from "@/components/ResumoContasBanco";
+import ResumoMetas from "@/components/ResumoMetas";
 import { 
   Wallet, 
   CreditCard, 
@@ -20,7 +21,8 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  RefreshCw
+  RefreshCw,
+  Target
 } from "lucide-react";
 
 interface Transacao {
@@ -500,6 +502,21 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
           </Card>
+
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => navigate("/metas")}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Target className="h-5 w-5 mr-2" />
+                Metas e Limites
+              </CardTitle>
+              <CardDescription>
+                Configure metas de receita e limites de gastos
+              </CardDescription>
+            </CardHeader>
+          </Card>
         </div>
 
         {/* Nova seção para Projeção de Fluxo de Caixa */}
@@ -520,6 +537,14 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Resumo de Metas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <ResumoMetas />
+          <div className="grid grid-cols-1 gap-6">
+            <ContasPendentes user={user} mesSelecionado={mesSelecionado} />
+          </div>
+        </div>
+
         {/* Seção de Gestão Financeira */}
         <div className="mb-8">
           <div className="mb-4">
@@ -534,10 +559,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Seção de Receitas Pendentes */}
-        <div className="grid grid-cols-1 gap-6 mb-8">
-          <ContasPendentes user={user} mesSelecionado={mesSelecionado} />
-        </div>
 
         {/* Transações Recentes */}
         <div className="grid grid-cols-1 gap-6 mb-8">

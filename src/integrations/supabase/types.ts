@@ -186,6 +186,53 @@ export type Database = {
           },
         ]
       }
+      metas_categoria: {
+        Row: {
+          ano: number
+          ativo: boolean
+          categoria_id: string
+          created_at: string
+          id: string
+          mes: number
+          tipo_meta: string
+          updated_at: string
+          user_id: string
+          valor_meta: number
+        }
+        Insert: {
+          ano: number
+          ativo?: boolean
+          categoria_id: string
+          created_at?: string
+          id?: string
+          mes: number
+          tipo_meta: string
+          updated_at?: string
+          user_id: string
+          valor_meta: number
+        }
+        Update: {
+          ano?: number
+          ativo?: boolean
+          categoria_id?: string
+          created_at?: string
+          id?: string
+          mes?: number
+          tipo_meta?: string
+          updated_at?: string
+          user_id?: string
+          valor_meta?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_metas_categoria_categoria_id"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
