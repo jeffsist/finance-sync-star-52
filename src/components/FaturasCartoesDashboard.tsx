@@ -160,27 +160,29 @@ const FaturasCartoesDashboard = ({ user, mesSelecionado }: FaturasCartoesDashboa
             {cartoes.map((cartao) => (
               <div
                 key={cartao.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors gap-3 sm:gap-4"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="bg-primary/10 text-primary p-2 rounded-lg">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="bg-primary/10 text-primary p-2 rounded-lg flex-shrink-0">
                     <CreditCard className="h-4 w-4" />
                   </div>
-                  <div>
-                    <p className="font-medium text-sm">{cartao.nome}</p>
-                    <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
-                      <span>Venc: {getDataVencimento(cartao)}</span>
-                      <span>•</span>
-                      <span>
+                  <div className="min-w-0 flex-1">
+                     <p className="font-medium text-sm truncate">{cartao.nome}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs text-muted-foreground gap-1 sm:gap-0">
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>Venc: {getDataVencimento(cartao)}</span>
+                      </div>
+                      <span className="hidden sm:inline">•</span>
+                      <span className="truncate">
                         Limite: {formatCurrency(cartao.limite - cartao.limite_usado)} disponível
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 flex-shrink-0">
                   <div className="text-right">
-                    <div className="font-bold text-sm">
+                    <div className="font-bold text-sm whitespace-nowrap">
                       {formatCurrency(cartao.valorFatura)}
                     </div>
                     {cartao.statusPagamento === 'paga' ? (

@@ -156,9 +156,9 @@ const ResumoContasBanco = ({ userId, onNavigateToContas }: ResumoContasBancoProp
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2 min-w-0 flex-1">
                         {getTipoIcon(banco.tipo)}
-                        <span className="font-medium truncate">{banco.nome}</span>
+                        <span className="font-medium truncate text-sm sm:text-base">{banco.nome}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded whitespace-nowrap ml-2">
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded whitespace-nowrap ml-2 flex-shrink-0">
                         {banco.tipo}
                       </span>
                     </div>

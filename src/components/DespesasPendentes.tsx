@@ -195,17 +195,19 @@ const DespesasPendentes = ({ user, mesSelecionado = new Date() }: DespesasPenden
                 )}
               </div>
               <div className="flex-1">
-                <h4 className="font-medium text-sm">{despesa.descricao}</h4>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                  <Calendar className="h-3 w-3" />
-                  <span className={isVencida(despesa.data_transacao) ? 'text-destructive font-medium' : ''}>
-                    {formatDate(despesa.data_transacao)}
-                    {isVencida(despesa.data_transacao) && ' (Vencida)'}
-                  </span>
+                <h4 className="font-medium text-sm truncate">{despesa.descricao}</h4>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-1">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span className={`whitespace-nowrap ${isVencida(despesa.data_transacao) ? 'text-destructive font-medium' : ''}`}>
+                      {formatDate(despesa.data_transacao)}
+                      {isVencida(despesa.data_transacao) && ' (Vencida)'}
+                    </span>
+                  </div>
                   {despesa.total_parcelas && despesa.parcela_atual && (
                     <>
-                      <span>•</span>
-                      <Badge variant="outline" className="text-xs">
+                      <span className="hidden sm:inline">•</span>
+                      <Badge variant="outline" className="text-xs whitespace-nowrap">
                         {despesa.parcela_atual}/{despesa.total_parcelas}
                       </Badge>
                     </>

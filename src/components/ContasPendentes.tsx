@@ -103,12 +103,14 @@ const ContasPendentes = ({ user, mesSelecionado = new Date() }: ContasPendentesP
             className="flex items-center justify-between p-3 border border-border rounded-lg bg-muted/30"
           >
             <div className="flex-1">
-              <h4 className="font-medium text-sm">{transacao.descricao}</h4>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                <Calendar className="h-3 w-3" />
-                <span>{formatDate(transacao.data_transacao)}</span>
+              <h4 className="font-medium text-sm truncate">{transacao.descricao}</h4>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-1">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  <span className="whitespace-nowrap">{formatDate(transacao.data_transacao)}</span>
+                </div>
                 {transacao.total_parcelas && transacao.parcela_atual && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs whitespace-nowrap">
                     {transacao.parcela_atual}/{transacao.total_parcelas}
                   </Badge>
                 )}
