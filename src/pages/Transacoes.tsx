@@ -605,7 +605,7 @@ const Transacoes = () => {
                 {transacoesPaginadas.map((transacao) => (
                   <div 
                     key={transacao.id}
-                    className={`flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors ${
+                    className={`flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-3 sm:gap-4 ${
                       isPendente(transacao) && transacao.tipo === "despesa" 
                         ? isVencida(transacao.data_transacao) 
                           ? "border-destructive/50 bg-destructive/5" 
@@ -613,8 +613,8 @@ const Transacoes = () => {
                         : ""
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
+                    <div className="flex items-center space-x-3 min-w-0 flex-1">
+                      <div className={`p-2 rounded-lg flex-shrink-0 ${
                         transacao.tipo === 'receita' 
                           ? 'bg-income/10 text-income' 
                           : isPendente(transacao) && isVencida(transacao.data_transacao)
@@ -633,46 +633,49 @@ const Transacoes = () => {
                           <TrendingDown className="h-4 w-4" />
                         )}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">{transacao.descricao}</h4>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>{formatDate(transacao.data_transacao)}</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm sm:text-base truncate">{transacao.descricao}</h4>
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            <span className="whitespace-nowrap">{formatDate(transacao.data_transacao)}</span>
+                          </div>
                           {transacao.categoria && (
                             <>
-                              <span>•</span>
-                              <span>{transacao.categoria.nome}</span>
+                              <span className="hidden sm:inline">•</span>
+                              <span className="truncate max-w-[80px] sm:max-w-none">{transacao.categoria.nome}</span>
                             </>
                           )}
                           {transacao.banco && (
                             <>
-                              <span>•</span>
-                              <span>{transacao.banco.nome}</span>
+                              <span className="hidden sm:inline">•</span>
+                              <span className="truncate max-w-[80px] sm:max-w-none">{transacao.banco.nome}</span>
                             </>
                           )}
                           {transacao.cartao_credito && (
                             <>
-                              <span>•</span>
-                              <span>{transacao.cartao_credito.nome}</span>
+                              <span className="hidden sm:inline">•</span>
+                              <span className="truncate max-w-[80px] sm:max-w-none">{transacao.cartao_credito.nome}</span>
                             </>
                           )}
                           {transacao.total_parcelas && transacao.parcela_atual && (
                             <>
-                              <span>•</span>
-                              <Badge variant="outline" className="text-xs">
+                              <span className="hidden sm:inline">•</span>
+                              <Badge variant="outline" className="text-xs whitespace-nowrap">
                                 {transacao.parcela_atual}/{transacao.total_parcelas}
                               </Badge>
                             </>
                           )}
                           {isPendente(transacao) && (
                             <>
-                              <span>•</span>
+                              <span className="hidden sm:inline">•</span>
                               <Badge 
                                 variant={
                                   transacao.tipo === "despesa" && isVencida(transacao.data_transacao)
                                     ? "destructive" 
                                     : "outline"
                                 } 
-                                className="text-xs"
+                                className="text-xs whitespace-nowrap"
                               >
                                 {transacao.tipo === "despesa" && isVencida(transacao.data_transacao)
                                   ? "Vencida" 
@@ -683,15 +686,15 @@ const Transacoes = () => {
                           )}
                         </div>
                         {transacao.observacoes && (
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-xs text-muted-foreground mt-1 truncate">
                             {transacao.observacoes}
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 flex-shrink-0">
                       <div className="text-right">
-                        <span className={`font-semibold ${
+                        <span className={`font-semibold text-sm sm:text-base whitespace-nowrap ${
                           transacao.tipo === 'receita' ? 'text-income' : 'text-expense'
                         }`}>
                           {transacao.tipo === 'receita' ? '+' : '-'}{formatCurrency(transacao.valor)}
@@ -703,10 +706,10 @@ const Transacoes = () => {
                             size="sm"
                             variant={isVencida(transacao.data_transacao) ? "default" : "outline"}
                             onClick={() => handleMarcarPaga(transacao)}
-                            className="text-xs h-8"
+                            className="text-xs h-8 whitespace-nowrap"
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
-                            Pagar
+                            <span className="hidden xs:inline">Pagar</span>
                           </Button>
                         )}
                         {isPendente(transacao) && transacao.tipo === "receita" && (
@@ -714,17 +717,17 @@ const Transacoes = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => handleMarcarRecebida(transacao)}
-                            className="text-xs h-8"
+                            className="text-xs h-8 whitespace-nowrap"
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
-                            Receber
+                            <span className="hidden xs:inline">Receber</span>
                           </Button>
                         )}
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEdit(transacao)}
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 flex-shrink-0"
                         >
                           <Edit2 className="h-3 w-3" />
                         </Button>
@@ -732,7 +735,7 @@ const Transacoes = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDelete(transacao)}
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive flex-shrink-0"
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -741,7 +744,7 @@ const Transacoes = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteGroup(transacao)}
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive flex-shrink-0"
                             title={`Excluir todas as ${transacao.total_parcelas} parcelas`}
                           >
                             <Trash className="h-3 w-3" />
@@ -756,16 +759,17 @@ const Transacoes = () => {
 
             {/* Paginação */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-6">
-                <p className="text-sm text-muted-foreground">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-6 gap-3">
+                <p className="text-sm text-muted-foreground text-center sm:text-left">
                   Página {currentPage} de {totalPages} • {transacoesFiltradas.length} transações
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-center sm:justify-end">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
+                    className="whitespace-nowrap"
                   >
                     Anterior
                   </Button>
@@ -774,6 +778,7 @@ const Transacoes = () => {
                     size="sm"
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
+                    className="whitespace-nowrap"
                   >
                     Próxima
                   </Button>
